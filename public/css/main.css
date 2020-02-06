@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  background-color: #eee;
+}
+/* .center-position {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+} */
+/* .send-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
+} */
+.upload-btn-wrapper {
+  position: relative;
+  padding: 2px;
+  overflow: hidden;
+  display: inline-block;
+}
+.upload-btn-wrapper input[type='file'] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}

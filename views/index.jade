@@ -1,0 +1,12 @@
+
+doctype html
+html
+head
+  link(href="//cdn.muicss.com/mui-0.10.1/css/mui.min.css" rel="stylesheet" type="text/css")
+  link(href="./css/main.css" rel="stylesheet" type="text/css")
+  script(src="//cdn.muicss.com/mui-0.10.1/js/mui.min.js")
+  title Upload files
+body
+    form(method ="post" action="/files/upload" enctype="multipart/form-data" class="mui-panel send-form center-position" )
+      input(type="file" name="fileUpload")
+      input(type="submit" class="mui-btn mui-btn--primary" value="Submit")

@@ -1,0 +1,37 @@
+html
+head
+  link(href="//cdn.muicss.com/mui-0.10.1/css/mui.min.css" rel="stylesheet" type="text/css")
+  link(href="./../css/main.css" rel="stylesheet" type="text/css")
+  script(src="//cdn.muicss.com/mui-0.10.1/js/mui.min.js")
+  title File storage
+body
+  h1 File storage
+  form(method ="post" action="/files/upload" enctype="multipart/form-data" class="mui-panel send-form center-position" )
+      input(type="file" name="fileUpload")
+      input(type="submit" class="mui-btn mui-btn--primary" value="Submit")
+  div(class="mui-panel")
+    table(class="mui-table mui-table--bordered")
+      thead
+        tr
+          th fileName
+             
+          th path
+          th size
+          th type
+          th uploadTime
+          th lastModifiedDate
+          th actions
+      tbody    
+        each file in data
+          tr
+           td
+            a(href="/files/download/"+file._id)=file.fileName
+           td= file.path
+           td= file.size
+           td= file.type
+           td= file.uploadTime   
+           td= file.lastModifiedDate
+           td
+             button(file-id=file._id class="mui-btn mui-btn--primary") delete
+
+script(src="./../js/main.js")
