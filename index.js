@@ -20,13 +20,13 @@ const format = json({
 
 const app = express()
 
-require('jade')
+require('pug')
 require('dotenv').config()
 require('./db/conectDB')
 app.use(compression())
 app.use(morgan(format, { stream: accessLogStream }))
 app.set('views', './views')
-app.set('view engine', 'jade')
+app.set('view engine', 'pug')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
-  process.env.NODE_ENV === 'dev' && console.log(error)
+  console.error(1111, error, error.code, Object.keys(error))
   if (error.status) {
     res.status(error.status)
     res.send(error)
@@ -56,7 +56,7 @@ app.use((error, req, res, next) => {
 })
 
 app.listen(process.env.SERVER_PORT, () => {
-  console.log(`Example app listening on port ${process.env.SERVER_PORT}!`)
+  console.info(`Example app listening on port ${process.env.SERVER_PORT}!`)
 })
 
 module.exports = app

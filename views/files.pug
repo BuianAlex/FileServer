@@ -16,8 +16,11 @@ body
           a(href="/files") Files
   
   form(method ="post" action="/files/upload" enctype="multipart/form-data" class="mui-panel send-form center-position" )
-      input(type="file" name="fileUpload")
-      input(type="submit" class="mui-btn mui-btn--primary" value="Submit")
+    span ADD file:
+    div(class="fileUpload-wrap") 
+     label(for="uploadFile" id="uploadLable") Browse...  
+     input(type="file" name="fileUpload" id="uploadFile")
+     input(type="submit" class="mui-btn mui-btn--primary float-right" value="Submit")
   div(class="mui-panel")
     table(class="mui-table mui-table--bordered")
       thead

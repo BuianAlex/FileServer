@@ -18,11 +18,11 @@
     "express": "^4.17.1",
     "file-type": "^14.1.1",
     "formidable": "^1.2.1",
-    "jade": "^1.11.0",
     "mongoose": "^5.8.10",
     "morgan": "^1.9.1",
     "morgan-json": "^1.1.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "pug": "^2.0.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",

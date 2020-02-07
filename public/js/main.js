@@ -114,8 +114,8 @@ function activateModal(id) {
   legend.textContent = 'Edit file info'
   form.appendChild(legend)
 
-  createTextInput(fileData.fileName, 'File name', 'name', form)
-  createTextInput(fileData.path, 'File path', 'path', form)
+  createTextInput(fileData.fileName, 'Remame', 'name', form)
+  createTextInput(fileData.path, 'Move to...', 'path', form)
 
   const saveBtn = document.createElement('button')
   saveBtn.classList.add(
@@ -146,3 +146,14 @@ if (editBtn) {
     activateModal(id)
   })
 }
+
+const uploadFile = document.querySelector('#uploadFile')
+const uploadLable = document.querySelector('#uploadLable')
+uploadFile.addEventListener(
+  'change',
+  function() {
+    uploadLable.textContent = this.files[0].name
+    console.log(this.files)
+  },
+  false
+)
