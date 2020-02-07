@@ -22,7 +22,7 @@
 
 ### Prod
 
-    npm run start
+    npm start
 
 ## Test
 
