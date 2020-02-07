@@ -1,32 +1,23 @@
 const mongoose = require('mongoose')
 
-const filesScheme = mongoose.Schema({
-  fileName: {
-    type: String,
-    index: true
+const filesScheme = mongoose.Schema(
+  {
+    fileName: {
+      type: String,
+      index: true
+    },
+    size: {
+      type: String
+    },
+    path: {
+      type: String
+    },
+    type: {
+      type: String
+    }
   },
-  size: {
-    type: String
-  },
-  path: {
-    type: String
-  },
-  type: {
-    type: String
-  },
-  uploadTime: {
-    type: Date
-  },
-  lastModifiedDate: {
-    type: Date
-  }
-})
-
-filesScheme.pre('save', next => {
-  const user = this
-  user.uploadTime = Date.now()
-  next()
-})
+  { timestamps: true }
+)
 
 const FileQuery = mongoose.model('files', filesScheme)
 module.exports = FileQuery

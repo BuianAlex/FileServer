@@ -58,7 +58,7 @@ router.post('/upload', async (req, res, next) => {
   })
 })
 
-router.get('/get', (req, res, next) => {
+router.get('/', (req, res, next) => {
   service
     .getFiles()
     .then(data => {
@@ -71,11 +71,11 @@ router.delete('/delete/:id', (req, res, next) => {
   service
     .deleteFile(req.params.id)
     .then(data => {
-      res.send('File deleted')
+      res.send(data)
     })
     .catch(err => {
       if (err.name === 'CastError') {
-        next(new HttpError('File whith id not found', 400))
+        next(new HttpError('Id not found', 400))
       }
       next(err)
     })
@@ -122,7 +122,7 @@ router.put('/edit/:id', (req, res, next) => {
       if (data) {
         res.send({ result: true })
       } else {
-        next(new HttpError('', 404))
+        next(new HttpError('', 400))
       }
     })
     .catch(next)

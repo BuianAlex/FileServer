@@ -4,7 +4,7 @@ const promisify = require('util').promisify
 const deleteFilePromise = promisify(fs.unlink)
 const renameFilePromise = promisify(fs.rename)
 const FileQuery = require('./scheme')
-
+const HttpError = require('../middleWare/errorMiddleware')
 const saveFile = fileInfo => {
   return new FileQuery(fileInfo).save()
 }
@@ -49,18 +49,25 @@ const deleteFile = async id => {
 const editFile = async (id, body) => {
   try {
     const fileInfo = await FileQuery.findOne({ _id: id })
-    const dirPath = path.join(__dirname, `../${body.path}`)
-    !fs.existsSync(dirPath) && fs.mkdirSync(dirPath)
-    const oldPath = path.join(
-      __dirname,
-      `../${fileInfo.path}`,
-      fileInfo.fileName
-    )
-    const newPath = path.join(__dirname, `../${body.path}`, body.name)
-    const resFs = renameFilePromise(oldPath, newPath)
-    fileInfo.fileName = body.name
-    fileInfo.path = body.path
-    return fileInfo.save()
+    if (!fileInfo) {
+      return Promise.reject(new HttpError('id is not found', 400))
+    }
+
+    if (fileInfo.path !== body.path || fileInfo.fileName !== body.name) {
+      const dirPath = path.join(__dirname, `../${body.path}`)
+      !fs.existsSync(dirPath) && fs.mkdirSync(dirPath)
+      const oldPath = path.join(
+        __dirname,
+        `../${fileInfo.path}`,
+        fileInfo.fileName
+      )
+      const newPath = path.join(__dirname, `../${body.path}`, body.name)
+      const resFs = await renameFilePromise(oldPath, newPath)
+      fileInfo.fileName = body.name
+      fileInfo.path = body.path
+      return fileInfo.save()
+    }
+    return false
   } catch (error) {
     return error
   }

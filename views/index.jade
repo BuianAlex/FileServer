@@ -7,6 +7,13 @@ head
   script(src="//cdn.muicss.com/mui-0.10.1/js/mui.min.js")
   title Upload files
 body
-    form(method ="post" action="/files/upload" enctype="multipart/form-data" class="mui-panel send-form center-position" )
-      input(type="file" name="fileUpload")
-      input(type="submit" class="mui-btn mui-btn--primary" value="Submit")
+    div(class="mui-appbar")
+     table(width="100%")
+      tr(style="vertical-align:middle;")
+        td( class="mui--appbar-height")
+          h1 Home
+        td(class="mui--appbar-height" align="right")
+          a(href="/") Home
+          a(href="/files") Files
+    
+      

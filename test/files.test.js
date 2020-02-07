@@ -7,6 +7,8 @@ const path = require('path')
 const FileQuery = require('../files/scheme')
 chai.use(chaiHttp)
 
+let testData
+
 describe('File Upload', () => {
   it('Upload valid file', done => {
     chai
@@ -61,7 +63,7 @@ describe('File DOWNLOAD', () => {
       })
   })
 
-  it('file not exist', done => {
+  it('file not exist in fsys', done => {
     const test = new FileQuery({
       fileName: 'test.test',
       size: 200,
@@ -70,6 +72,7 @@ describe('File DOWNLOAD', () => {
       lastModifiedDate: 34534534534
     })
     test.save().then(data => {
+      testData = test
       chai
         .request(server)
         .get(`/files/download/${data._id}`)
@@ -84,65 +87,8 @@ describe('File DOWNLOAD', () => {
   })
 })
 
-describe('File DELETE', () => {
-  it('Delete file which not saved in db', done => {
-    chai
-      .request(server)
-      .delete('/files/delete/234423423423')
-      .end((err, res) => {
-        if (err) {
-          console.log(err)
-        }
-        res.should.have.status(200)
-        // res.body.deleteFromDB.result.should.eql(false)
-        done()
-      })
-  })
-
-  it('Delete file which saved on the fs and db', done => {
-    FileQuery.findOne({ fileName: 'calce.jpg' }).then(data => {
-      chai
-        .request(server)
-        .delete(`/files/delete/${data._id}`)
-        .end((err, res) => {
-          if (err) {
-            console.log(err)
-          }
-          res.should.have.status(200)
-          // res.body.deleteFromDB.result.should.eql(true)
-          // res.body.deleteFileSys.result.should.eql(true)
-          done()
-        })
-    })
-  })
-
-  it('Delete file which saved on the db but not in fs', done => {
-    const test = new FileQuery({
-      fileName: 'test.test',
-      size: 200,
-      path: '/uploads/',
-      type: 'test/test',
-      lastModifiedDate: 34534534534
-    })
-    test.save().then(data => {
-      chai
-        .request(server)
-        .delete(`/files/delete/${data._id}`)
-        .end((err, res) => {
-          if (err) {
-            console.log(err)
-          }
-          res.should.have.status(200)
-          // res.body.deleteFromDB.result.should.eql(true)
-          // res.body.deleteFileSys.result.should.eql(false)
-          done()
-        })
-    })
-  })
-})
-
 describe('File Edit', () => {
-  it('replace', done => {
+  it('Rename and replace file which not exist in the fs and db should be status (400)', done => {
     const newFileData = { name: 'new.nwe', path: '/sdsd/' }
     chai
       .request(server)
@@ -152,9 +98,72 @@ describe('File Edit', () => {
         if (err) {
           console.log(err)
         }
-        console.log(res.status)
-        console.log(res.body)
+        res.should.have.status(400)
+        done()
+      })
+  })
 
+  it('Rename and replace file should be status (200)', done => {
+    const newFileData = { name: 'new.nwe', path: '/sdsd/' }
+    FileQuery.findOne({ fileName: 'calce.jpg' }).then(data => {
+      chai
+        .request(server)
+        .put(`/files/edit/${data._id}`)
+        .send(newFileData)
+        .end((err, res) => {
+          if (err) {
+            console.log(err)
+          }
+          res.should.have.status(200)
+          done()
+        })
+    })
+  })
+})
+
+describe('File DELETE', () => {
+  it('Delete file which not saved in db should be status (200) whith error msg', done => {
+    chai
+      .request(server)
+      .delete('/files/delete/234423423423')
+      .end((err, res) => {
+        if (err) {
+          console.log(err)
+        }
+        res.should.have.status(200)
+        res.body.deleteFromDB.result.should.eql(false)
+        done()
+      })
+  })
+
+  it('Delete file which saved on the fs and db should be status (200)', done => {
+    FileQuery.findOne({ fileName: 'new.nwe' }).then(data => {
+      chai
+        .request(server)
+        .delete(`/files/delete/${data._id}`)
+        .end((err, res) => {
+          if (err) {
+            console.log(err)
+          }
+          res.should.have.status(200)
+          res.body.deleteFromDB.result.should.eql(true)
+          res.body.deleteFileSys.result.should.eql(true)
+          done()
+        })
+    })
+  })
+
+  it('Delete file which saved on the db but not in the fs should be status(200) whith error msg', done => {
+    chai
+      .request(server)
+      .delete(`/files/delete/${testData._id}`)
+      .end((err, res) => {
+        if (err) {
+          console.log(err)
+        }
+        res.should.have.status(200)
+        res.body.deleteFromDB.result.should.eql(true)
+        res.body.deleteFileSys.result.should.eql(false)
         done()
       })
   })

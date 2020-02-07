@@ -1,15 +1,30 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
+const compression = require('compression')
 const bodyParser = require('body-parser')
 const path = require('path')
 const fs = require('fs')
+const morgan = require('morgan')
+const json = require('morgan-json')
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'log/access.log'),
+  { flags: 'a' }
+)
+const format = json({
+  method: ':method',
+  url: ':url',
+  status: ':status',
+  length: ':res[content-length]',
+  responseTime: ':response-time ms'
+})
 
 const app = express()
 
 require('jade')
 require('dotenv').config()
 require('./db/conectDB')
-
+app.use(compression())
+app.use(morgan(format, { stream: accessLogStream }))
 app.set('views', './views')
 app.set('view engine', 'jade')
 app.use(bodyParser.json())
